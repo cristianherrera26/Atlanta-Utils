@@ -10,11 +10,6 @@
 #include <stdio.h>
 #include <err.h>
 
-#if !defined(__atlantic__)
-#define setprogname(name)
-#define getprogname()	"ldyd"
-#endif
-
 #if defined(__linux__) && (defined(__x86_64__) || defined(__amd64__))
  #if defined(__atlantic__)			/* Dynamic Loader name in AtlanticOS (Uses a musl fork)*/
  #define LD	"/usr/libexec/ld_elf.so.1"
