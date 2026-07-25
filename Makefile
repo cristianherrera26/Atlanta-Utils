@@ -1,3 +1,3 @@
-SUBDIR=	bsdvers sw_vers
+SUBDIR=	bsdvers ldyd sw_vers
 
 .include <bsd.subdir.mk>
