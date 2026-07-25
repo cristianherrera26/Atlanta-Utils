@@ -13,7 +13,7 @@ static const char BuildVersion[] = __DATE__;
 static void
 usage(void)
 {
-	printf("Usage: %s\n"
+	printf("usage: %s\n"
 		"  or:  %s -productName\n"
 		"  or:  %s -productVersion\n"
 		"  or:  %s -buildVersion\n",
