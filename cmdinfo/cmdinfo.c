@@ -1,3 +1,9 @@
+/*
+ * NOTE: If you want to port this command to another system
+ * you need to update cmd_tbl so that it matches the origin
+ * and other details of each command.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
