@@ -3,8 +3,8 @@
 #include <string.h>
 
 static const char ProductName[] = "AtlanticOS";
-static const char ProductVersion[] = "26B";
-#if defined(BUILD_VERSION)
+static const char ProductVersion[] = "26B";	/* 26 => 2026 */ /* AtlanticOS has 2 cycles, A (Jan-Jun) and B (Jul-Dec) */
+#if defined(BUILD_VERSION)			/* This must be defined on official release builds */
 static const char BuildVersion[] = BUILD_VERSION;
 #else
 static const char BuildVersion[] = __DATE__;
