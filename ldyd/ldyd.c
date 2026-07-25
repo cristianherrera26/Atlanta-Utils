@@ -25,7 +25,7 @@ static int ldyd_main(char *file);
 static int is_script(char *file);
 
 static const struct option longopts[] = {
-	{ "help", no_argument, 0, 1000 },
+	{ "help", no_argument, 0, 'h' },
 	{ 0, 0, 0, 0 }
 };
 
@@ -35,9 +35,9 @@ main(int argc, char *argv[])
 	int c, ret = 0;
 	setprogname(argv[0]);
 
-	while ((c = getopt_long(argc, argv, "", longopts, NULL)) != -1) {
+	while ((c = getopt_long(argc, argv, "h", longopts, NULL)) != -1) {
 		switch (c) {
-		case 1000:
+		case 'h':
 			usage();
 			break;
 		default:
