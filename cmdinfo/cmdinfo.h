@@ -30,7 +30,7 @@ static const table_t cmd_tbl[] = {
 	{ "ldyd", "1.0", "List the dynamic dependencies of a executable", "AtlanticOS", "Stable", "None" },
 	{ "printenv", "1.0", "Print the environment variables", "NetBSD", "Stable", "None"},
 	{ "pwd", "1.0", "Print the current working directory", "NetBSD", "Stable", "None" },
-	{ "sw_vers", "1.0", "A reimplementation of the macOS command", "AtlanticOS", "Stable", "Update command for compatibility"
+	{ "sw_vers", "1.1", "A reimplementation of the macOS command", "AtlanticOS", "Stable", "Update command for compatibility"
 										               " with modern macOS version" },
 	{ "sync", "1.0", "Call to the sync syscall", "NetBSD", "Stable", "None" },
 	{ "uname", "1.2", "Print system information", "NetBSD", "Stable",  "\n- Remove sysctl dependency"
