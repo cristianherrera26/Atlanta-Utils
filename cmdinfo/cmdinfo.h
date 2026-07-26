@@ -31,4 +31,6 @@ static const table_t cmd_tbl[] = {
 	{ "cmdinfo", "1.0", "Print information about a command", "AtlanticOS", "Stable", "None" },
 };
 
+#define CMD_NUM	8	/* This is unused, is only for know commands number */
+
 #endif
