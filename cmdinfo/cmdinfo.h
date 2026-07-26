@@ -23,7 +23,7 @@ typedef struct {
 static const table_t cmd_tbl[] = {
 	{ "bsdvers", "1.0", "Print project information", "AtlanticOS", "Stable", "None" },
 	{ "cmdinfo", "1.0", "Print information about a command", "AtlanticOS", "Unfinished", "None" },
-	{ "domainanme", "1.0", "Print or set the NIS/YP domain name", "NetBSD", "Stable", "None" },
+	{ "domainname", "1.0", "Print or set the NIS/YP domain name", "NetBSD", "Stable", "None" },
 	{ "echo", "1.0", "Display all passed arguments to standard output", "NetBSD", "Stable", "None" },
 	{ "env", "1.0", "Print or modify the environment variables", "NetBSD", "Stable", "None" },
 	{ "hostname", "1.0", "Print or set the system hostname", "NetBSD", "Stable", "None" },
