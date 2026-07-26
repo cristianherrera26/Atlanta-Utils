@@ -22,7 +22,7 @@ main(int argc, char *argv[])
 		return 1;
 	}
 
-	if (!strcmp(argv[1], "--help") | !strcmp(argv[1], "-h"))
+	if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h"))
 		usage();
 	for (int i = 1; i < argc; i++) {
 		if (cmdinfo(argv[i]) != 0)
