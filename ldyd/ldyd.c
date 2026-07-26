@@ -95,7 +95,7 @@ ldyd_main(char *file)
 	setenv("LD_TRACE_LOADED_OBJECTS", "1", 1);
 #endif
 	pid_t pid = fork();
-	if (pid == 1) {
+	if (pid == -1) {
 		err(EXIT_FAILURE, "fork");
 	}
 
@@ -110,7 +110,7 @@ ldyd_main(char *file)
 		}
 	}
 
-	waitpid(pid, NULL, 0);
+	waitpid(pid, NULL, 0);	/* I don't care about the exit code */
 	goto end;
 
 no_exec:
@@ -144,6 +144,6 @@ is_script(char *file)
 static void
 usage(void)
 {
-	printf("usage: %s [--help] FILE...\n", getprogname());
+	printf("usage: %s [--help|-h] FILE...\n", getprogname());
 	exit(0);
 }
