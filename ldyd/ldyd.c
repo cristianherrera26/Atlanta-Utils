@@ -87,7 +87,7 @@ ldyd_main(char *file)
 		goto no_exec;
 	}
 
-	if (is_script(file)) {
+	if (is_script(buf)) {
 		goto no_exec;
 	}
 
@@ -138,6 +138,7 @@ is_script(char *file)
 
 	if (buf[0] == '#' && buf[1] == '!')
 		return 1;
+
 	return 0;
 }
 
