@@ -20,18 +20,14 @@ usage(void)
 		"  or:  %s --productVersionExtra\n"
 		"  or:  %s --buildVersion\n",
 		getprogname(), getprogname(), getprogname(), getprogname(), getprogname());
-	exit(0);
+	exit(1);
 }
 
 int
 main(int argc, char *argv[])
 {
-	if (argc > 2) {
-		printf("%s: extra operand '%s'\n", getprogname(), argv[2]);
-		printf("Try '%s --help' for more information.\n", getprogname());
-		return 1;
-	}
-
+	if (argc > 2)
+		usage();
 	if (argc == 2) {
 		if (!strcmp(argv[1], "--productName") || !strcmp(argv[1], "-productName"))
 			printf("%s\n", ProductName);
@@ -41,13 +37,8 @@ main(int argc, char *argv[])
 			printf("%s\n", ProductVersionExtra);
 		else if (!strcmp(argv[1], "--buildVersion") || !strcmp(argv[1], "-buildVersion"))
 			printf("%s\n", BuildVersion);
-		else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-help") || !strcmp(argv[1], "-h"))
+		else
 			usage();
-		else {
-			fprintf(stderr, "%s: invalid option '%s'\n", getprogname(), argv[1]);
-			fprintf(stderr, "Try '%s --help' for more information.\n", getprogname());
-			return 1;
-		}
 	} else if (argc == 1) {
 		printf( "ProductName:           %s\n"
 			"ProductVersion:        %s\n"

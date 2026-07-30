@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <getopt.h>
 #include <limits.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -24,36 +23,23 @@ static void usage(void);
 static int ldyd_main(char *file);
 static int is_script(char *file);
 
-static const struct option longopts[] = {
-	{ "help", no_argument, 0, 'h' },
-	{ 0, 0, 0, 0 }
-};
-
 int
 main(int argc, char *argv[])
 {
 	int c, ret = 0;
 	setprogname(argv[0]);
-
-	while ((c = getopt_long(argc, argv, "h", longopts, NULL)) != -1) {
+	while ((c = getopt(argc, argv, "")) != -1) {
 		switch (c) {
-		case 'h':
-			usage();
-			break;
 		default:
-			fprintf(stderr, "Try '%s --help' for more information.\n", getprogname());
-			return 1;
+			usage();
 		}
 	}
 
 	argc -= optind;
 	argv += optind;
 
-	if (argc == 0) {
-		fprintf(stderr, "%s: missing operand\n", getprogname());
-		fprintf(stderr, "Try '%s --help' for more information.\n", getprogname());
-		return 1;
-	}
+	if (argc == 0)
+		usage();
 
 	for (int i = 0; i < argc; i++) {
 		if (argc > 1) {
@@ -145,6 +131,6 @@ is_script(char *file)
 static void
 usage(void)
 {
-	printf("usage: %s [--help|-h] FILE...\n", getprogname());
-	exit(0);
+	printf("usage: %s FILE...\n", getprogname());
+	exit(1);
 }
