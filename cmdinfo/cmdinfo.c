@@ -1,17 +1,20 @@
 /*
  * NOTE: If you want to port this command to another system
- * you need to update cmd_tbl so that it matches the origin
- * and other details of each command.
+ * you need to update or create the .about files so that it match
+ * the origin and other details of each command.
 */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <unistd.h>
 #include <getopt.h>
-#include "cmdinfo.h"
+#include <fcntl.h>
+#include <err.h>
+
+#define INFO_PATH       "/usr/share/cmdinfo"
 
 static void usage(void);
-static int cmdinfo(char *cmd);
+static int print_info(char *cmd);
 
 static const struct option longopts[] = {
 	{ "list", no_argument, 0, 'l' },
@@ -23,60 +26,50 @@ int
 main(int argc, char *argv[])
 {
 	int c, ret = 0;
-	int list = 0;
-	while ((c = getopt_long(argc, argv, "hl", longopts, NULL)) != -1) {
+	while ((c = getopt(argc, argv, "")) != -1) {
 		switch (c) {
-		case 'h':
-			usage();
-			break;
-		case 'l':
-			list = 1;
-			break;
 		default:
-			fprintf(stderr, "Try 'cmdinfo --help' for more information\n");
-			return 1;
+			usage();
 		}
 	}
 
 	argc -= optind;
 	argv += optind;
 
-	if (list || argc == 0) {
-		for (int i = 0; i < CMD_NUM; i++) {
-			printf("%d. %s\n", i + 1, cmd_tbl[i].name);
-		}
-	} else {
-		for (int i = 0; i < argc; i++) {
-			if (cmdinfo(argv[i]) != 0)
-				ret = 1;
-		}
+	for (int i = 0; i < argc; i++) {
+		if (print_info(argv[i]) != 0)
+			ret = 1;
 	}
 
 	return ret;
 }
 
 static int
-cmdinfo(char *cmd)
+print_info(char *cmd)
 {
-	for (int i = 0; i < CMD_NUM; i++) {
-		if (!strcmp(cmd_tbl[i].name, cmd)) {
-			printf("Name: %s\n", cmd_tbl[i].name);
-			printf("Version: %s\n", cmd_tbl[i].version);
-			printf("Description: %s\n", cmd_tbl[i].desc);
-			printf("Origin: %s\n", cmd_tbl[i].origin);
-			printf("Status: %s\n", cmd_tbl[i].status);
-			printf("Changes: %s\n", cmd_tbl[i].changes);
-			return 0;
-		}
+	int ret_read = 0;
+	char path[256], buf[512];
+	char *env_path = getenv("INFOPATH");
+	if (env_path)
+		snprintf(path, sizeof(path), "%s/%s.about", env_path, cmd);
+	else
+		snprintf(path, sizeof(path), "%s/%s.about", INFO_PATH, cmd);
+	int fd = open(path, O_RDONLY);
+	if (fd < 0) {
+		warn("%s", path);
+		return 1;
 	}
 
-	fprintf(stderr, "cmdinfo: unknown command '%s'\n", cmd);
-	return 1;
+	ret_read = read(fd, buf, sizeof(buf));
+	if (ret_read < 0)
+		return 1;
+	write(STDOUT_FILENO, buf, ret_read);
+	return 0;
 }
 
 static void
 usage(void)
 {
-	printf("usage: cmdinfo [--help|-h] [-l] [command]\n");
-	exit(0);
+	printf("usage: cmdinfo COMMAND\n");
+	exit(1);
 }
