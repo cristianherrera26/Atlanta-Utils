@@ -1,3 +1,3 @@
-SUBDIR=	bsdvers cmdinfo ldyd sw_vers
+SUBDIR=	src
 
 .include <bsd.subdir.mk>
