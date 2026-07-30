@@ -5,7 +5,7 @@
 #define URL "https://github.com/cristianherrera26/Atlanta-Utils"
 
 int
-main(int argc, char *argv[])
+main(void)
 {
 	printf("\n");
 	printf("   \\\\ %s`-______,----__%s           Atlanta-Utils v26\n", ORANGE, RESET);
