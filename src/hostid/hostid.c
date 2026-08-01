@@ -18,7 +18,7 @@ main(int argc, char *argv[])
 	if (argc != optind)
 		usage();
 
-	printf("%lx\n", gethostid() & 0xFFFFFFFF);
+	printf("%08lx\n", gethostid() & 0xFFFFFFFF);
 	return 0;
 }
 
