@@ -13,7 +13,7 @@
 #define INFO_PATH       "/usr/share/cmdinfo"
 
 static void usage(void);
-static int print_info(char *cmd);
+static int print_info(const char *cmd, const char *basepath);
 
 int
 main(int argc, char *argv[])
