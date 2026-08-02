@@ -1,3 +1,3 @@
-SUBDIR=	arch bsdvers cmdinfo hello hostid ldyd machine sw_vers
+SUBDIR=	bsdvers cmdinfo hello hostid ldyd machine sw_vers
 
 .include <bsd.subdir.mk>
