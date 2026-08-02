@@ -1,0 +1,8 @@
+Name: machine
+Version: 1.0
+Description: Print machine hardware name (same as uname -m)
+Origin: AtlanticOS
+Since: AtlanticOS 26B
+Status: Stable
+Last Update: 2026-07-31
+Changes: None
