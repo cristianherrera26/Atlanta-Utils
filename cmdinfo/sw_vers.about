@@ -1,8 +1,0 @@
-Name: sw_vers
-Version: 1.0
-Description: A reimplementation of the macOS command
-Origin: AtlanticOS
-Since: AtlanticOS 26B
-Status: Stable
-Last Update: 2026-07-26
-Changes: None
