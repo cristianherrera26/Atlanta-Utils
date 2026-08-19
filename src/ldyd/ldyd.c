@@ -9,27 +9,38 @@
 #include <stdio.h>
 #include <err.h>
 
-#if defined(__linux__) && (defined(__x86_64__) || defined(__amd64__))
- #if defined(__atlantic__)			/* Dynamic Loader name in AtlanticOS (Uses a musl fork)*/
- #define LD	"/usr/libexec/ld_elf.so.1"
- #elif !defined(__GLIBC__)			/* musl */
- #define LD	"/lib/ld-musl-x86_64.so.1"
- #endif 					/* We dont need the dynamic loader name for GLIBC */
-#else
- #error "This only works properly on x86_64 Linux"	/* We only care about Linux on x86_64 machines */
+#if !defined(__linux__) || !defined(__x86_64__)
+#error "This only works properly on x86_64 Linux"	/* We only care about Linux on x86_64 machines */
 #endif
 
+#if defined(__GLIBC__)
+#define DEFAULT GLIBC
+#else
+#define DEFAULT MUSL
+#endif
+
+static const char *LD_MUSL = "/lib/ld-musl-x86_64.so.1";
+
+static const int GLIBC = 1;
+static const int MUSL = 2;
+
 static void usage(void);
-static int ldyd_main(char *file);
-static int is_script(char *file);
+static int ldyd_main(const char *file, int mode);
+static int is_script(const char *file);
 
 int
 main(int argc, char *argv[])
 {
 	int c, ret = 0;
-	setprogname(argv[0]);
-	while ((c = getopt(argc, argv, "")) != -1) {
+	int mode = DEFAULT;
+	while ((c = getopt(argc, argv, "Gm")) != -1) {
 		switch (c) {
+		case 'G':
+			mode = GLIBC;
+			break;
+		case 'm':
+			mode = MUSL;
+			break;
 		default:
 			usage();
 		}
@@ -46,7 +57,7 @@ main(int argc, char *argv[])
 			printf("%s:\n", argv[i]);
 		}
 
-		if (ldyd_main(argv[i]) != 0)
+		if (ldyd_main(argv[i], mode) != 0)
 			ret = 1;
 	}
 
@@ -54,7 +65,7 @@ main(int argc, char *argv[])
 }
 
 static int
-ldyd_main(char *file)
+ldyd_main(const char *file, int mode)
 {
 	char buf[PATH_MAX];
 	if (!strrchr(file, '/')) {
@@ -77,22 +88,21 @@ ldyd_main(char *file)
 		goto no_exec;
 	}
 
-#if defined(__GLIBC__)
-	setenv("LD_TRACE_LOADED_OBJECTS", "1", 1);
-#endif
+	if (mode == GLIBC)
+		setenv("LD_TRACE_LOADED_OBJECTS", "1", 1);
+
 	pid_t pid = fork();
 	if (pid == -1) {
 		err(EXIT_FAILURE, "fork");
 	}
 
 	if (pid == 0) {
-#if defined(__GLIBC__)
-		if (execl(buf, buf, NULL) != 0) {
-			err(EXIT_FAILURE, "%s", buf);
-#else
-		if (execl(LD, LD, "--list", buf, NULL) != 0) {
-			err(EXIT_FAILURE, "%s", LD);
-#endif
+		if (mode == GLIBC) {
+			if (execl(buf, buf, NULL) != 0)
+				err(EXIT_FAILURE, "%s", buf);
+		} else {
+			if (execl(LD_MUSL, LD_MUSL, "--list", buf, NULL) != 0)
+				err(EXIT_FAILURE, "%s", LD_MUSL);
 		}
 	}
 
@@ -108,7 +118,7 @@ end:
 }
 
 static int
-is_script(char *file)
+is_script(const char *file)
 {
 	int fd;
 	char buf[2];
@@ -131,6 +141,6 @@ is_script(char *file)
 static void
 usage(void)
 {
-	printf("usage: %s FILE...\n", getprogname());
+	printf("usage: %s [-Gm] FILE...\n", getprogname());
 	exit(1);
 }
