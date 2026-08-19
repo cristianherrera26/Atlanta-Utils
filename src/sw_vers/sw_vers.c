@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <err.h>
 
-static const char ProductName[] = "AtlanticOS";
-static const char ProductVersion[] = "26.0";		/* 26 => 2026 */ 
-static const char ProductVersionExtra[] = "(b)";	/* AtlanticOS has 2 cycles, A (Jan-Jun) and B (Jul-Dec) */
-#if defined(BUILD_VERSION)				/* This must be defined on official release builds */
-static const char BuildVersion[] = BUILD_VERSION;
-#else
-static const char BuildVersion[] = __DATE__;
-#endif
+#define FILE_PATH	"/etc/SystemVersion"
 
 static void
 usage(void)
@@ -23,11 +19,48 @@ usage(void)
 	exit(1);
 }
 
+static void
+FindInText(char *text, const char *key, char *buf, size_t buflen)
+{
+	if (!text || !key || !buflen)
+		return;
+	char *str = strstr(text, key);
+	if (str)
+		str += strlen(key);
+	else {
+		*str = '\0';
+		return;
+	}
+	for (; *str == ' ' || *str == ':'; str++);
+	while (*str != '\n' && buflen-- > 1) *buf++ = *str++;
+	*buf = 0;
+}
+
 int
 main(int argc, char *argv[])
 {
+	int fd;
+	char file[1024];
+	char ProductName[256];
+	char ProductVersion[256];
+	char ProductVersionExtra[256];
+	char BuildVersion[256];
+
 	if (argc > 2)
 		usage();
+
+	if ((fd = open(FILE_PATH, O_RDONLY)) < 0)
+		err(EXIT_FAILURE, "%s", FILE_PATH);
+	if (read(fd, file, sizeof(file)) < 0)
+		err(EXIT_FAILURE, "read");
+
+	FindInText(file, "ProductName", ProductName, sizeof(ProductName));
+	FindInText(file, "ProductVersion", ProductVersion, sizeof(ProductVersion));
+	FindInText(file, "ProductVersionExtra", ProductVersionExtra, sizeof(ProductVersionExtra));
+	FindInText(file, "BuildVersion", BuildVersion, sizeof(BuildVersion));
+
+	close(fd);
+
 	if (argc == 2) {
 		if (!strcmp(argv[1], "--productName") || !strcmp(argv[1], "-productName"))
 			printf("%s\n", ProductName);
